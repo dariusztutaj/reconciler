@@ -213,7 +213,13 @@ func (c *DefaultIstioPerformer) PatchMutatingWebhook(context context.Context, ku
 	if err != nil {
 		return err
 	}
-	if sidecarMigrationEnabled || !sidecarMigrationIsSet {
+
+	injectSidecar, err := isSidecarInjectionNamespacesByDefaultEnabled(workspace, branchVersion, istioChart)
+	if err != nil {
+		return err
+	}
+
+	if injectSidecar && (sidecarMigrationEnabled || !sidecarMigrationIsSet) {
 		err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
 			whConf, err := c.selectWebhookConf(context, istioWebHookConfName, clientSet)
 			if err != nil {

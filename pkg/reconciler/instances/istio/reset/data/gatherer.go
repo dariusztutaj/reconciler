@@ -142,6 +142,9 @@ func (i *DefaultGatherer) GetPodsInIstioMesh(kubeClient kubernetes.Interface, re
 						continue
 					}
 				}
+				if podsList == nil {
+					podsList = &v1.PodList{}
+				}
 				podsList.Items = append(podsList.Items, pod)
 			}
 		}
