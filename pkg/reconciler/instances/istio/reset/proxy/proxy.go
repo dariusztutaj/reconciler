@@ -30,10 +30,10 @@ func NewDefaultIstioProxyReset(gatherer data.Gatherer, action reset.Action) *Def
 }
 
 func (i *DefaultIstioProxyReset) Run(cfg config.IstioProxyConfig) error {
-	image := data.ExpectedImage{
-		Prefix:  cfg.ImagePrefix,
-		Version: cfg.ImageVersion,
-	}
+	//image := data.ExpectedImage{
+	//	Prefix:  cfg.ImagePrefix,
+	//	Version: cfg.ImageVersion,
+	//}
 
 	waitOpts := pod.WaitOptions{
 		Interval: cfg.Interval,
@@ -60,10 +60,10 @@ func (i *DefaultIstioProxyReset) Run(cfg config.IstioProxyConfig) error {
 			cfg.Log.Warn("No pods to restart")
 			return nil
 		}
-		podsWithDifferentImage := i.gatherer.GetPodsWithDifferentImage(*podsInMesh, image)
+		//podsWithDifferentImage := i.gatherer.GetPodsWithDifferentImage(*podsInMesh, image)
 
 		//cfg.Log.Debugf("Found %d pods with different istio proxy image (%s)", len(podsWithDifferentImage.Items), image)
-		podsWithoutAnnotation := data.RemoveAnnotatedPods(podsWithDifferentImage, pod.AnnotationResetWarningKey)
+		podsWithoutAnnotation := data.RemoveAnnotatedPods(*podsInMesh, pod.AnnotationResetWarningKey)
 		if len(podsInMesh.Items) >= 1 && len(podsWithoutAnnotation.Items) == 0 {
 			cfg.Log.Warnf(
 				"Found %d pods belong to istio mesh, but we cannot update sidecar proxy image for them. Look for pods with annotation %s,"+
